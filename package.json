@@ -1,0 +1,3657 @@
+{
+    "scriptappy": "1.0.0",
+    "info": {
+      "name": "CapabilityAPI",
+      "description": "The Capability APIs are a collection of JavaScript APIs that allows you to easily embed Qlik Sense content into a web page, and interact with data. With just a few lines of code, it is possible to create a visualization that leverages the Qlik Sense visualization library.",
+      "version": "1.7.1",
+      "stability": "stable",
+      "x-qlik-visibility": "public"
+    },
+    "entries": {
+      "js/qlik": {
+        "description": "External interface to qlik, for mashups and including qlik in foreign web pages.",
+        "kind": "module",
+        "entries": {
+          "callRepository": {
+            "description": "Call Qlik repository.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "path",
+                "description": "Path to the Qlik Sense repository. Refer to Qlik Sense repository documentation for the available paths.",
+                "type": "string"
+              },
+              {
+                "name": "method",
+                "description": "HTTP method.",
+                "optional": true,
+                "defaultValue": "GET",
+                "type": "string"
+              },
+              {
+                "name": "body",
+                "description": "Body of the post.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik repository reply.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "object"
+                }
+              ]
+            },
+            "examples": [
+              "qlik.callRepository(\"/qrs/extension/schema\").then(function(reply) {\n\t\tconsole.log(JSON.stringify(reply));\n\t  });"
+            ]
+          },
+          "currApp": {
+            "description": "Get a reference to the current app. Use in an extension to get a reference to the app displayed.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "reference",
+                "description": "Reference to extension object. Since Qlik Sense 1.1",
+                "optional": true,
+                "type": "object"
+              }
+            ],
+            "returns": {
+              "description": "An App JavaScript object with app methods.",
+              "type": "#/definitions/QApp"
+            },
+            "examples": [
+              "var app = qlik.currApp(this);\n   app.clearAll();"
+            ]
+          },
+          "getAppList": {
+            "description": "Get a list of Qlik apps and register a callback to receive the data.\nThe reply will contain all apps the user has access to.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "type": "function"
+              },
+              {
+                "name": "config",
+                "description": "Additional configuration parameters.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "host": {
+                    "description": "Qlik host",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "Port number as a string or a number.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "prefix": {
+                    "description": "Qlik virtual proxy, '/' if no proxy",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "isSecure": {
+                    "description": "Use SSL",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "identity": {
+                    "description": "Unique identity for the session. If omitted, the session will be shared.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "examples": [
+              "var config = {\n\t\thost: \"myhost.com\",\n\t\tprefix: \"/\",\n\t\tport: window.location.port,\n\t\tisSecure: true\n\t};\n qlik.getAppList(function(list){\n\t\tvar str = \"\";\n\t\tlist.forEach(function(value) {\n\t\t\tstr +=  value.qDocName + \"(\"+ value.qDocId +\") \";\n\t\t});\n\t\tconsole.log(str);\n\t}, config);"
+            ]
+          },
+          "getExtensionList": {
+            "description": "Get the list of extensions installed in the system.\nThe reply will contain all extensions such as visualizations, mashups, and so on.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "qlik.getExtensionList(function(list){\n\t\tvar str = \"\";\n\t\tlist.forEach(function(value) {\n\t\t\tstr +=  value.id + \"(\" + value.data.type + \") \";\n\t\t});\n\t\tconsole.log(str);\n\t});"
+            ]
+          },
+          "getGlobal": {
+            "description": "Open a connection with a Web Socket to engine for global methods.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "config",
+                "description": "Additional configuration parameters.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "host": {
+                    "description": "Qlik host",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "Port number as a string or a number.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "prefix": {
+                    "description": "Qlik virtual proxy, '/' if no proxy",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "isSecure": {
+                    "description": "Use SSL",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "identity": {
+                    "description": "Unique identity for the session. If omitted, the session will be shared.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "A global JavaScript object with global methods.",
+              "type": "#/definitions/QGlobal"
+            },
+            "examples": [
+              "var config = {\n\t\thost: \"myhost.com\",\n\t\tprefix: \"/\",\n\t\tport: window.location.port,\n\t\tisSecure: true\n\t  };\n   var global = qlik.getGlobal(config);\n   global.getAuthenticatedUser(function(reply){\n\t\tconsole.log(\"User:\"+reply.qReturn);\n\t  });"
+            ]
+          },
+          "getThemeList": {
+            "description": "Get a list of themes from the system. The list will contain both default and custom themes.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a list of themes including the ID and the metadata name.",
+              "type": "Promise"
+            },
+            "examples": [
+              "qlik.getThemeList().then(function(list){\n\t\tvar str = \"\";\n\t\tlist.forEach(function(value) {\n\t\t\tstr += value.name + '(' + value.id + \")\\n\";\n\t\t});\n\t\tconsole.log(str);\n\t});"
+            ]
+          },
+          "navigation": {
+            "type": "#/definitions/QNavigation"
+          },
+          "off": {
+            "description": "Remove listener(s) for the qlik instance events.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. If no eventName is provided, removes all listeners.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "qlik.on(\"error\", err=>{\n  console.error(err);\n});\nqlik.off(\"error\");"
+            ]
+          },
+          "on": {
+            "description": "Add listener(s) to the qlik instance events. Possible events are error, warning, and closed. Multiple listeners can be added to an event.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. Can be: error, warning, closed. Note: this event handler will be overridden by app event handlers or global event handlers if set.",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "qlik.on(\"error\", err=>{\n  console.error(err);\n});\nqlik.on(\"warning\", warn=>{\n  console.warn(warn);\n});"
+            ]
+          },
+          "openApp": {
+            "description": "Opens the app. You can open multiple apps. Most other methods are defined on the app. Introduced in Qlik Sense 1.0.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "appId",
+                "description": "The app ID.",
+                "type": "string"
+              },
+              {
+                "name": "config",
+                "description": "Additional configuration parameters.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "host": {
+                    "description": "Qlik host",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "Port number as a string or a number.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "prefix": {
+                    "description": "Qlik virtual proxy, '/' if no proxy",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "isSecure": {
+                    "description": "Use SSL",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "openWithoutData": {
+                    "description": "Open app without loading data. Since Qlik Sense 1.1",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "identity": {
+                    "description": "Unique identity for the session. If omitted, the session will be shared.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "An App JavaScript object with app methods.",
+              "type": "#/definitions/QApp"
+            },
+            "examples": [
+              "var app = qlik.openApp(\"2abac31e-3b46-4b78-8bxf-c5cea1d2514d\");\n     var config = {\n\t\t  host: \"myhost.com\",\n\t\t  prefix: \"/\",\n\t\t  port: window.location.port,\n\t\t  isSecure: true\n\t    };\n     var app2 = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\", config);"
+            ]
+          },
+          "Promise": {
+            "description": "Promise utility that can be used for asynchronous operations. Very useful for the paint method to\nindicate that the rendering is complete. Full documentation available on:\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "executor",
+                "description": "The executing function with two parameters: resolve and reject.",
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "var Promise = qlik.Promise;\nqlik.registerExtension(\"dumpchart\",\n       {\n     \tpaint:function($element,layout) {\n       \t\treturn new Promise(function(resolve, reject) {\n       \t    \tsetTimeout(function() {\n       \t        \t$element.html(JSON.stringify(layout));\n       \t        \tresolve(); // Extension painted successfully\n       \t    \t}, 1000);\n       \t\t});\n       \t}\n   });"
+            ]
+          },
+          "registerExtension": {
+            "description": "Register an extension for use in this mashup.\nThe extension will not be installed on Qlik Sense server, but only available in the session where it\nis created.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Set the ID of the visualization extension.",
+                "type": "string"
+              },
+              {
+                "name": "impl",
+                "description": "Set the extension implementation.",
+                "type": "object"
+              },
+              {
+                "name": "metadata",
+                "description": "Extension metadata, same format as QEXT file.",
+                "optional": true,
+                "defaultValue": "{\"type\":\"visualization\"}",
+                "type": "object"
+              }
+            ],
+            "examples": [
+              "qlik.registerExtension(\"dumpchart\",\n\n   {\n       paint:function($element,layout){\n           $element.html(JSON.stringify(layout));\n       }\n   });",
+              "requirejs([path +\"/wordcloud/wordcloud.js\"],function(wordcloud)\n{\n   qlik.registerExtension( \"wordcloud\", wordcloud );\n});"
+            ]
+          },
+          "resize": {
+            "description": "Sends a resize event to all Qlik objects.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "ID",
+                "description": "Object ID. Optional: if no ID, resize event will be sent to all objects.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "//create the tabs and make qlik objects resize\n //when a new tab is selected\n $(\"#tabs\").tabs().bind(\"tabsselect\", function(event, ui) {\n\t\tqlik.resize();\n\t});"
+            ]
+          },
+          "sessionApp": {
+            "description": "Creates a session/cached QApp object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "config",
+                "description": "Additional configuration parameters.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "host": {
+                    "description": "Qlik host",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "Port number as a string or a number.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "prefix": {
+                    "description": "Qlik virtual proxy, '/' if no proxy.",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "isSecure": {
+                    "description": "Use SSL.",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "identity": {
+                    "description": "Unique identity for the session. If omitted, the session will be shared.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "An app JavaScript object with app methods.",
+              "type": "#/definitions/QApp"
+            },
+            "examples": [
+              "<caption>Basic usage</caption>\nvar sessionApp = qlik.sessionApp();",
+              "<caption>Basic usage with config</caption>\nvar config = {\n  host: \"myhost.com\",\n  prefix: \"/\",\n  port: window.location.port,\n  isSecure: true\n};\nvar sessionApp =  qlik.sessionApp(config);"
+            ]
+          },
+          "sessionAppFromApp": {
+            "description": "Creates a session/cached QApp object from an existing app.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "appId",
+                "description": "App ID of the app to base the session app upon.",
+                "type": "string"
+              },
+              {
+                "name": "config",
+                "description": "Additional configuration parameters.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "host": {
+                    "description": "Qlik host",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "Port number as a string or a number.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "prefix": {
+                    "description": "Qlik virtual proxy, '/' if no proxy.",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "isSecure": {
+                    "description": "Use SSL.",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "identity": {
+                    "description": "Unique identity for the session. If omitted, the session will be shared.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "An app JavaScript object with app methods.",
+              "type": "#/definitions/QApp"
+            },
+            "examples": [
+              "<caption>Basic usage</caption>\nvar sessionApp = qlik.sessionAppFromApp(\"2abac31e-3b46-4b78-8bxf-c5cea1d2514d\");",
+              "<caption>Basic usage with config</caption>\nvar config = {\n  host: \"myhost.com\",\n  prefix: \"/\",\n  port: window.location.port,\n  isSecure: true\n};\nvar sessionApp = qlik.sessionAppFromApp(\"2abac31e-3b46-4b78-8bxf-c5cea1d2514d\", config);",
+              "<caption>Multiple apps</caption>\nvar sessionApp = qlik.sessionAppFromApp(\"2abac31e-3b46-4b78-8bxf-c5cea1d2514d\");\nvar sessionApp2 = qlik.sessionAppFromApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\");"
+            ]
+          },
+          "setDeviceType": {
+            "description": "Sets device type, which modifies the UI accordingly.\nThe device type is automatically detected if it is not manually set.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "deviceType",
+                "description": "Type of device. One of: auto, touch, desktop.",
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "qlik.setDeviceType('desktop');"
+            ]
+          },
+          "setLanguage": {
+            "description": "Set language.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "lang",
+                "description": "Language code",
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "qlik.setLanguage(\"es\");"
+            ]
+          },
+          "setOnError": {
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "onError",
+                "description": "Error handling function.",
+                "type": "function"
+              },
+              {
+                "name": "onWarning",
+                "description": "Warning handling function. Since Qlik Sense 2.1.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "qlik.setOnError(function(error) {\n  //contains code, message\n\t console.log(error.message);\n},\nfunction(warning){\n\t windows.console.log(warning);\n});"
+            ]
+          },
+          "table": {
+            "description": "Create a QTable object that wraps data in your extension and provides an object-oriented interface.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "ext",
+                "description": "Extension or angular scope for the extension.",
+                "type": "object"
+              },
+              {
+                "name": "path",
+                "description": "Path to the hypercube.",
+                "optional": true,
+                "defaultValue": "qHyperCube",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "table - A QTable object that holds data and options for the table.",
+              "type": "#/definitions/QTable"
+            },
+            "examples": [
+              "$scope.table = qlik.table(this);\n\n<tr ng-repeat=\"row in table.rows\">\n   <td ng-repeat=\"cell in row.cells\"> {{cell.qText}} </td>\n</tr>"
+            ]
+          },
+          "theme": {
+            "type": "#/definitions/QGlobalTheme"
+          }
+        },
+        "examples": [
+          "var config = {\n\t host: \"myhost.com\",\n\t prefix: \"/\",\n\t port: window.location.port,\n\t isSecure: true\n};\nrequirejs([\"js/qlik\"], function(qlik) {\n\t // open the app\n  var app = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\", config);\n\t // insert Qlik objects into the page.\n\t app.getObject(document.getElementById(\"LB01\"), \"uPyZavD\");\n}"
+        ]
+      }
+    },
+    "definitions": {
+      "Notification": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "bind": {
+            "description": "Observe a Notification by sending in an observer function.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "observer",
+                "description": "The observer function to handle the notification.",
+                "type": "function"
+              }
+            ]
+          },
+          "unbind": {
+            "description": "Stop observing a notification.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "observer",
+                "description": "The observer function that now should ignore any future notifications.",
+                "type": "function"
+              }
+            ]
+          }
+        }
+      },
+      "ObjectMetricSize": {
+        "description": "Describes the size, in millimeters (mm), of a 2D object.",
+        "kind": "object",
+        "entries": {
+          "height": {
+            "description": "Object height in millimeters (mm).",
+            "type": "number"
+          },
+          "width": {
+            "description": "Object width in millimeters (mm).",
+            "type": "number"
+          }
+        }
+      },
+      "ObjectPixelSize": {
+        "description": "Describes the size, in pixels, of a 2D object.",
+        "kind": "object",
+        "entries": {
+          "height": {
+            "description": "Object height in pixels.",
+            "type": "number"
+          },
+          "width": {
+            "description": "Object width in pixels.",
+            "type": "number"
+          }
+        }
+      },
+      "QApp": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "addAlternateState": {
+            "description": "Add an alternate state.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qStateName",
+                "description": "Alternate state name.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.addAlternateState(\"X\");"
+            ]
+          },
+          "back": {
+            "description": "Back to prev selection.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.back();"
+            ]
+          },
+          "bookmark": {
+            "type": "#/definitions/QBookmark"
+          },
+          "clearAll": {
+            "description": "Clear all selections.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "lockedAlso",
+                "description": "Also clear locked fields. Since Qlik Sense 2.1",
+                "optional": true,
+                "defaultValue": false,
+                "type": "boolean"
+              },
+              {
+                "name": "state",
+                "description": "Alternate state name. Since Qlik Sense 2.1",
+                "optional": true,
+                "defaultValue": "$",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.clearAll();"
+            ]
+          },
+          "close": {
+            "description": "Close an app.\n\nWill also close the web socket and clear out client side data.\n\nIntroduced in Qlik Sense 1.1",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.close();"
+            ]
+          },
+          "createCube": {
+            "description": "Defines a Qlik Hypercube and registers a callback to receive the data.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qHyperCubeDef",
+                "description": "Cube definition.",
+                "type": "object"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method. Parameter will contain a qHyperCube.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.createCube({\n  qDimensions : [{\n    qDef : {\n      qFieldDefs : [\"FirstName\"]\n    }\n  }, {\n    qDef : {\n      qFieldDefs : [\"LastName\"]\n  }\n}],\nqMeasures : [{\n  qDef : {\n    qDef : \"1\"\n  }\n}],\nqInitialDataFetch : [{\n  qTop : 0,\n  qLeft : 0,\n  qHeight : 20,\n  qWidth : 3\n}]\n}, function(reply) {\n  var str = \"\";\n  $.each(reply.qHyperCube.qDataPages[0].qMatrix, function(key, value) {\n    str += '<li>' + value[0].qText + ':' + value[1].qText + '</li>';\n  });\n  $('#list').html(str);\n});"
+            ]
+          },
+          "createGenericObject": {
+            "description": "Creates a Qlik Generic object and registers a callback to receive the data.\nThe generic object can contain qHyperCubeDef, qListObjectDef and/or\nqStringExpression and qValueExpression.\nIt will be a session object and disppears when the session is closed.\nThe callback method will be called whenever the selection state changes in a way\nthat affects the generic object. The parameter will be the evaluated version of the definition.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "param",
+                "description": "Generic object definition.",
+                "type": "object"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.createGenericObject( {\n  user: {\n    qStringExpression: \"=QVUser ()\"\n  },\n  version : {\n    qStringExpression: \"=QlikViewVersion ()\"\n  },\n  fields: {\n    qValueExpression: \"=Count (DISTINCT $Field)\"\n  }\n}, function ( reply ) {\n  var str = \"Version:\" + reply.version + \" Fields:\" + reply.fields;\n  if ( reply.user ) {\n    str += \" User:\" + reply.user;\n  }\n  $( \"#info\" ).html(str);\n});"
+            ]
+          },
+          "createList": {
+            "description": "Defines a Qlik list of field values and registers a callback to receive the data.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qListObjectDef",
+                "description": "List definition.",
+                "type": "object"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method. Parameter will contain a qListObject.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.createList({\n  \"qDef\": {\n    \"qFieldDefs\": [\n      \"LastName\"\n    ]\n   },\n   \"qInitialDataFetch\": [{\n     qTop : 0,\n     qLeft : 0,\n     qHeight : 20,\n     qWidth : 1\n   }]\n   }, function(reply) {\n     var str = \"\";\n     $.each(reply.qListObject.qDataPages[0].qMatrix, function(key, value) {\n       str += '<li>' + value[0].qText + '</li>';\n     });\n     $('#list').html(str);\n   });"
+            ]
+          },
+          "createTable": {
+            "description": "Defines a Qlik Hypercube and creates a table object wrapping the hypercube.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "dimensions",
+                "description": "Dimensions to use. Should be a field name or a NxDimension structure for each entry.",
+                "kind": "array",
+                "items": {
+                  "kind": "union",
+                  "items": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "NxDimension"
+                    }
+                  ],
+                  "type": "any"
+                }
+              },
+              {
+                "name": "measures",
+                "description": "Measures to use. Should be an expression or a NxMeasure structure for each entry.",
+                "kind": "array",
+                "items": {
+                  "kind": "union",
+                  "items": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "NxMeasure"
+                    }
+                  ],
+                  "type": "any"
+                }
+              },
+              {
+                "name": "options",
+                "description": "Options to set.",
+                "optional": true,
+                "type": "object"
+              }
+            ],
+            "returns": {
+              "description": "A table object of type QTable, which is initially empty but eventually will contain data. The table object will be updated when selection state changes.",
+              "type": "#/definitions/QTable"
+            },
+            "examples": [
+              "var users = app.createTable([\"FirstName\", \"LastName\"], [\"Count(Case Id)\"],{rows:200});"
+            ]
+          },
+          "destroySessionObject": {
+            "description": "Destroys a Qlik Session object created with createGenericObject or any of\ncreateCube, createList, or getList calls.\n\nThe object will be removed from engine, no more updates will be sent to the client\nand all methods on the object will be invalid.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Session object ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.destroySessionObject( 'xcVtY');\napp.destroySessionObject(reply.qInfo.qId);"
+            ]
+          },
+          "doReload": {
+            "description": "Reload the app.\n\nIntroduced in Qlik Sense 1.1",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qMode",
+                "description": "Error handling mode: 0 = default mode, 1 = attempt recovery on all errors, 2 = fail on all errors.",
+                "optional": true,
+                "type": "number"
+              },
+              {
+                "name": "qPartial",
+                "description": "Set to true for partial reload.",
+                "optional": true,
+                "type": "boolean"
+              },
+              {
+                "name": "qDebug",
+                "description": "Set to true if debug breakpoints are honored. Execution of the script will be in debug mode.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.doReload();"
+            ]
+          },
+          "doSave": {
+            "description": "Save the app.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qFileName",
+                "description": "File name of the file to save.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.doReload().then(function(){\n   app.doSave();\n});"
+            ]
+          },
+          "field": {
+            "description": "Get a field reference with methods to manipulate field.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "fld",
+                "description": "Name of the field.",
+                "type": "string"
+              },
+              {
+                "name": "statename",
+                "description": "Alternate state name.",
+                "optional": true,
+                "defaultValue": "'$'",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A QField object with methods and properties that can be used to manipulate the field.",
+              "type": "#/definitions/QField"
+            }
+          },
+          "forward": {
+            "description": "Forward",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.forward();"
+            ]
+          },
+          "getAppLayout": {
+            "description": "Get layout for this app and register a callback to receive the data.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getAppLayout(function(layout){\n  console.log(layout.qTitle);\n});"
+            ]
+          },
+          "getAppObjectList": {
+            "description": "Get a list of Qlik application objects and register a callback to receive the data.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "type",
+                "description": "Type of object. One of: sheet, MasterObject.",
+                "optional": true,
+                "defaultValue": "sheet",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "app.getAppObjectList( 'sheet', function(reply){\n  var str = \"\";\n  $.each(reply.qAppObjectList.qItems, function(key, value) {\n    str +=  value.qData.title + ' ';\n    $.each(value.qData.cells, function(k,v){\n      str +=  v.name + ' ';\n    });\n  });\n  console.log(str);\n});"
+            ]
+          },
+          "getFullPropertyTree": {
+            "description": "Get properties for a Qlik object including children properties.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Object ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getFullPropertyTree(value.qInfo.qId).then(function(model){\n  console.log(model.propertyTree.qChildren.length + ' children');\n});"
+            ]
+          },
+          "getList": {
+            "description": "Get a list of internal Qlik objects and register a callback to receive the data.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "type",
+                "description": "Type of object. One of: FieldList, MeasureList, DimensionList,\n  BookmarkList, SelectionObject, SnapshotList Since Qlik Sense 1.1,\n  MediaList Since Qlik Sense 1.1, sheet Since Qlik Sense 1.1, MasterObject Since Qlik Sense 1.1,\n  VariableList Since Qlik Sense 2.0, story Since Qlik Sense 2.1",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Registers a callback that is executed every time data is returned.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getList(\"FieldList\", function(reply){\n  var str = \"\";\n  $.each(reply.qFieldList.qItems, function(key, value) {\n    str +=  value.qName + ' ';\n  });\n console.log(str);\n});"
+            ]
+          },
+          "getObject": {
+            "description": "Inserts a Qlik object into an HTML element.\nThe object will fill the HTML object, so you can size and position\nthe element to determine how large the Qlik object will be.\n\nIf you only supply one parameter, you will just get the model without displaying the object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "elem",
+                "description": "HTML element. Since version 1.1, it is also possible to define a string of the HTML element ID.",
+                "optional": true,
+                "kind": "union",
+                "items": [
+                  {
+                    "type": "HTMLElement"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "type": "any"
+              },
+              {
+                "name": "id",
+                "description": "Object ID or 'CurrentSelections' if used for Selections bar. Since version November 2017 it is also possible to use 'AppNavigationBar' to on-demand app navigation bar.",
+                "type": "string"
+              },
+              {
+                "name": "options",
+                "description": "Additional options.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "noInteraction": {
+                    "description": "Set to true if you want to disable interaction, including selections, in the visualization. Since Qlik Sense 1.1",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "noSelections": {
+                    "description": "Set to true if you want to disable selections in the visualization. Since Qlik Sense 3.0",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "variant": {
+                    "description": "used only when getting 'CurrentSelections', for rendering the \"dark\" variant. Possible values: \"dark\".",
+                    "x-qlik-visibility": "private",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "sheetId": {
+                    "description": "Sheet id where App Navigation bar exists. (only applies if id='AppNavigationBar') Since Qlik Sense November 2017",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "openAppCallback": {
+                    "description": "Used if you want to handle what happens when user clicks the 'open generated app' button.\nOtherwise by default generated app is opened in new tab. Callback returns appId and targetSheetId. (only applies if id='AppNavigationBar') Since Qlik Sense November 2017",
+                    "optional": true,
+                    "type": "function"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getObject(document.getElementById(\"LB01\"), \"uPyZavD\");",
+              "app.getObject(\"LB01\",\"uPyZavD\");",
+              "app1.getObject('MyAppNavigationToolbarDIVid', 'AppNavigationBar', { sheetId: \"RWcstb\", openAppCallback: function ( appId, targetSheetId ) {\n  console.log(\"Open generated app event handled.  App ID: \" + appId + \" target sheet to open by default: \" + targetSheetId);\n}});"
+            ]
+          },
+          "getObjectProperties": {
+            "description": "Get properties for a Qlik object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Object ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getObjectProperties(\"uPyZavD\").then(function(model){\n  this.title = model.properties.title;\n});"
+            ]
+          },
+          "getScript": {
+            "description": "Gets the data load script of this app.\n\nIntroduced in Qlik Sense 4.0",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a qScript object with the load script values.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp( \"MY_APP_ID\");\napp.getScript().then( function(script){\n  console.log(script);\n});"
+            ]
+          },
+          "getSnapshot": {
+            "description": "Inserts a Qlik snapshot into an HTML element.\nThe snapshot will fill the HTML object, so you can size and position\nthe element to determine how large the Qlik object will be.\n\nIf you only supply one parameter you will just get the model without displaying the object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "element",
+                "description": "HTML element or string with HTML element id.",
+                "optional": true,
+                "kind": "union",
+                "items": [
+                  {
+                    "type": "HTMLElement"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "type": "any"
+              },
+              {
+                "name": "id",
+                "description": "Snapshot ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an object model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.getSnapshot(document.getElementById(\"SNAPSHOT\"), \"uPyZavD\");"
+            ]
+          },
+          "lockAll": {
+            "description": "Lock all selections.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "state",
+                "description": "Alternate state name. Since Qlik Sense 2.1.",
+                "optional": true,
+                "defaultValue": "$",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.lockAll();"
+            ]
+          },
+          "off": {
+            "description": "Remove listener(s) for the app events.\n\nIntroduced in Qlik Sense February 2018.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. Can be: error, warning, closed. If no eventName is provided, removes all listeners.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "var app = qlik.openApp(\"MY_APP_ID\");\napp.on(\"error\", function ( error ) {\n  console.log(\"error listener called for app\", error);\n});\napp.off(\"error\");"
+            ]
+          },
+          "on": {
+            "description": "Add listener(s) to the app events. Possible events are error, warning and closed. Multiple listeners can be added to an event.\n\nIntroduced in Qlik Sense February 2018.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. Can be: error, warning, closed.",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "var app = qlik.openApp(\"MY_APP_ID\");\napp.on(\"error\", function ( error ) {\n  console.log(\"error listener called for app\", error);\n});\napp.on(\"warning\", function ( warning ) {\n  console.log(\"warning listener called for app\", warning);\n});\napp.on(\"closed\", function ( closed ) {\n  console.log(\"closed listener called for app\", closed);\n});"
+            ]
+          },
+          "removeAlternateState": {
+            "description": "Remove an alternate state.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qStateName",
+                "description": "Alternate state name",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.removeAlternateState(\"X\");"
+            ]
+          },
+          "searchAssociations": {
+            "description": "Searches for one or more terms in the values of an app.\n\nIntroduce in Qlik Sense 1.1.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "qTerms",
+                "description": "Terms to search for.",
+                "kind": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "qPage",
+                "kind": "object",
+                "entries": {
+                  "qOffset": {
+                    "description": "Position from the top, starting from 0.",
+                    "type": "number"
+                  },
+                  "qCount": {
+                    "description": "Number of search results to return.",
+                    "type": "number"
+                  },
+                  "qMaxNbrFieldMatches": {
+                    "description": "Maximum number of matching values to return per search result.",
+                    "type": "number"
+                  }
+                }
+              },
+              {
+                "name": "qOptions",
+                "description": "Search options.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "qSearchFields": {
+                    "description": "List of search fields.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "qContext": {
+                    "description": "Search context. Can be one of: Cleared, LockedFieldsOnly, CurrentSelections.",
+                    "optional": true,
+                    "defaultValue": "LockedFieldsOnly",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.searchAssociations([\"se\"],\n  {qOffset:0,qCount:15,qMaxNbrFieldMatches:5},\n  {qContext: 'CurrentSelections'},\n  function(reply){\n    var str = \"\";\n    reply.qResults.qFieldDictionaries.forEach(function(dic){\n      dic.qResult.forEach(function(result){\n        str += result.qText;\n      });\n    });\n    console.log(str);\n});"
+            ]
+          },
+          "searchResults": {
+            "description": "Searches for one or more terms in the values of an app.\n\nIntroduced in Qlik Sense 2.2.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qTerms",
+                "description": "Terms to search for.",
+                "kind": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "qPage",
+                "kind": "object",
+                "entries": {
+                  "qOffset": {
+                    "description": "Position from the top, starting from 0.",
+                    "type": "number"
+                  },
+                  "qCount": {
+                    "description": "Number of search results to return.",
+                    "type": "number"
+                  },
+                  "qGroupOptions": {
+                    "description": "Options of the search groups. If this property is not set, all values are returned.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "SearchGroupOptions"
+                    }
+                  },
+                  "qGroupItemOptions": {
+                    "description": "Options of the search group items. If this property is not set, all values are returned.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "SearchGroupItemOptions"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "qOptions",
+                "description": "Search options.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "qSearchFields": {
+                    "description": "List of search fields.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "qContext": {
+                    "description": "Search context. Can be one of: Cleared, LockedFieldsOnly, CurrentSelections.",
+                    "optional": true,
+                    "defaultValue": "LockedFieldsOnly",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.searchResults( [\"ma\"],\n  { qOffset: 0, qCount: 15},\n  {qContext: 'CurrentSelections'},\n  function ( reply ) {\n    if ( reply.qResult.qTotalNumberOfGroups === 0 ) {\n      console.log('No matches');\n    } else {\n      var str = \"\";\n      reply.qResult.qSearchGroupArray.forEach( function ( value ) {\n        value.qItems.forEach( function ( item ) {\n          str += item.qIdentifier +\": \";\n          item.qItemMatches.forEach( function ( match ) {\n            str += match.qText + ' ';\n          });\n        });\n      });\n      console.log(str);\n    }\n});"
+            ]
+          },
+          "searchSuggest": {
+            "description": "Returns search suggestions.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qTerms",
+                "description": "Terms to search for.",
+                "kind": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "qOptions",
+                "description": "Search options.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "qSearchFields": {
+                    "description": "List of search fields.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.searchSuggest([\"se\"], {}, function(reply) {\n  var str = \"\";\n  reply.qResult.qSuggestions.forEach(function(sugg){\n    str += sugg.qValue + ' ';\n  });\n  console.log(str);\n});"
+            ]
+          },
+          "selectAssociations": {
+            "description": "Make a selection based on searchAssociaton results.\n\nIntroduced in Qlik Sense 1.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qMatchIx",
+                "description": "Index to search result.",
+                "optional": true,
+                "type": "number"
+              },
+              {
+                "name": "qTerms",
+                "description": "Values to select.",
+                "optional": true,
+                "kind": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "qOptions",
+                "description": "Parameter sent to the Qlik engine containing information about the search fields and the search context.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "qSearchFields": {
+                    "description": "List of the search fields. If empty, the search is performed in all fields of the app.",
+                    "optional": true,
+                    "kind": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "qContext": {
+                    "description": "Search context. Can be one of: Cleared, LockedFieldsOnly, CurrentSelections.",
+                    "optional": true,
+                    "defaultValue": "LockedFieldsOnly",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "name": "qSoftLock",
+                "description": "Use the qOptions.qContext parameter instead.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.selectAssociations( 0, [\"May\",\"Mar\"] );"
+            ]
+          },
+          "selectionState": {
+            "description": "Creates a SelectionState object that encapsulates the selection state.\n\nIntroduced in Qlik Sense 2.2.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "state",
+                "description": "Sets the state.",
+                "optional": true,
+                "defaultValue": "$",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A selection state object for the selection state of type QSelectionState.",
+              "type": "#/definitions/QSelectionState"
+            }
+          },
+          "setScript": {
+            "description": "Sets the data load script of this app. Also validates the script syntax and returns the syntax errors if errors exist.\n\nIntroduced in Qlik Sense 4.0.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "script",
+                "description": "The script content.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an empty object or a list of syntax errors depending on the validation result.",
+              "type": "Promise"
+            },
+            "examples": [
+              "<caption>Load script inline</caption>\nvar script = \"Load Chr(RecNo()+Ord('A')-1) as Alpha, RecNo() as Num autogenerate 26;\"\nvar app = qlik.openApp( \"MY_APP_ID\");\napp.setScript(script).then( function(result){\n\tconsole.log(result);\n});",
+              "<caption>Load script from file</caption>\nvar script = 'LOAD Sales FROM [lib://data/sample.xlsx];';\nvar app = qlik.openApp( \"MY_APP_ID\");\napp.setScript(script).then( function(result){\n  console.log(result);\n});"
+            ]
+          },
+          "theme": {
+            "type": "#/definitions/QAppTheme"
+          },
+          "unlockAll": {
+            "description": "Unlock all selections.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "state",
+                "description": "Alternate state name. Since Qlik Sense 2.1.",
+                "optional": true,
+                "defaultValue": "$",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('2abac31e-3b46-4b78-8bxf-c5cea1d2514d');\napp.unlockAll();"
+            ]
+          },
+          "variable": {
+            "type": "#/definitions/QVariable"
+          },
+          "visualization": {
+            "type": "#/definitions/QAppVisualization"
+          }
+        }
+      },
+      "QAppTheme": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "get": {
+            "description": "Get theme as a QTheme object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Theme ID. If no ID is specified, the theme saved for the app is returned.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a QTheme object.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "#/definitions/QTheme"
+                }
+              ]
+            },
+            "examples": [
+              "app.theme.get('my-theme-id').then(function(qtheme){\n   console.log('Theme background color: ' + qtheme.properties.backgroundColor);\n\t});"
+            ]
+          },
+          "getApplied": {
+            "description": "Get currently applied theme as a QTheme object.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a QTheme object.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "#/definitions/QTheme"
+                }
+              ]
+            },
+            "examples": [
+              "app.theme.getApplied().then(function(qtheme){\n   console.log('Current theme background color: ' + qtheme.properties.backgroundColor);\n\t});"
+            ]
+          },
+          "save": {
+            "description": "Save a theme ID of an app.\n\nIntroduced in Qlik Sense February 2018.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Theme ID.",
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "app.theme.save('my-theme-id');"
+            ]
+          }
+        }
+      },
+      "QAppVisualization": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "create": {
+            "description": "Create a new visualization. The visualization will be based on a session object and not persisted in the app.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "type",
+                "description": "Visualization type. Built-in visualization like barchart, piechart, linechart, combochart or an extension.",
+                "type": "string"
+              },
+              {
+                "name": "cols",
+                "description": "Column definitions, dimensions and measures. Each entry can be a string, an NxDimension\n                     or NxMeasure structure. If the NxDimension or NxMeasure refers to a library dimension or measure,\n                     you also might need to add qType measure or dimension.",
+                "optional": true,
+                "kind": "array",
+                "items": {
+                  "kind": "union",
+                  "items": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "NxDimension"
+                    },
+                    {
+                      "type": "NxMeasure"
+                    }
+                  ],
+                  "type": "any"
+                }
+              },
+              {
+                "name": "options",
+                "description": "Options to set. Refer to documentation for the visualization used for additional options.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "title": {
+                    "description": "Visualization title.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "Expression"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "showTitles": {
+                    "description": "Show title for visualization. Default true.",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "subtitle": {
+                    "description": "Visualization subtitle.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "Expression"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "footnote": {
+                    "description": "Visualization footnote.",
+                    "optional": true,
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "Expression"
+                      }
+                    ],
+                    "type": "any"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "A promise of a {@link QVisualization}.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "#/definitions/QVisualization"
+                }
+              ]
+            },
+            "examples": [
+              "create a barchart on the fly\nvar app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.create('barchart',[\"Case Owner Group\",\"=Avg([Case Duration Time])\"],{title:\"Great on-the-fly barchart\"}).then(function(bar){\n  bar.show('QV04');\n});",
+              "create a table\napp.visualization.create( 'table', [\"Case Owner Group\", \"=Avg([Case Duration Time])\", \"Priority\", \"Quarter\"] ).then( function ( table ) {\n  table.show( 'QV04' );\n});",
+              "create a toolbar using an extension\napp.visualization.create('com-qliktech-toolbar',null,\n  {\"buttons\":{\"clear\":true,\"back\":true,\"forward\":true}}).then(function(vis){\n    vis.show(\"QV05\");\n});"
+            ]
+          },
+          "get": {
+            "description": "Get an existing visualization.\n\nIntroduced in Qlik Sense 2.2.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "ID for an existing visualization.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a {@link QVisualization}.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "#/definitions/QVisualization"
+                }
+              ]
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\n   app.visualization.get('xGhjKl').then(function(vis){\n     vis.show(\"QV01\");\n   });"
+            ]
+          }
+        }
+      },
+      "QBookmark": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "apply": {
+            "description": "Apply bookmark.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Bookmark ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply. Since Qlik Sense 1.2.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\");\napp.bookmark.apply(\"pPvpTN\");"
+            ]
+          },
+          "create": {
+            "description": "Create bookmark based on current selection.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "title",
+                "description": "Bookmark title.",
+                "type": "string"
+              },
+              {
+                "name": "description",
+                "description": "Bookmark description.",
+                "type": "string"
+              },
+              {
+                "name": "sheetId",
+                "description": "Bookmark sheet ID. Since Qlik Sense 2.2.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply. Since Qlik Sense 1.2.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\");\napp.bookmark.create(\"Test\",\"Test bookmark\",\"fmcJkH\");"
+            ]
+          },
+          "remove": {
+            "description": "Remove bookmark.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Bookmark ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply. Since Qlik Sense 1.2.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\");\napp.bookmark.remove(\"pPvpTN\");"
+            ]
+          }
+        }
+      },
+      "QDimensionCell": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Wrapper around a HyperCube dimension cell.",
+          "params": []
+        },
+        "entries": {
+          "qText": {
+            "description": "Cell value formatted as set up in properties.",
+            "type": "string"
+          },
+          "qElemNumber": {
+            "description": "Cell value index.",
+            "type": "number"
+          },
+          "qState": {
+            "description": "Cell state.",
+            "type": "string"
+          },
+          "qNum": {
+            "description": "Cell numeric value, if cell is numeric.",
+            "optional": true,
+            "type": "number"
+          },
+          "select": {
+            "description": "Select the value contained in this cell.",
+            "kind": "function",
+            "params": [],
+            "examples": [
+              "<div class=\"selectable\" ng-class=\"{'selected':cell.selected}\" ng-click=\"cell.select($event)\">{{cell.qText}}</div>"
+            ]
+          }
+        }
+      },
+      "QField": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "External interface to the fields in a Qlik Sense app and contains methods for field level commands.",
+          "params": []
+        },
+        "entries": {
+          "clear": {
+            "description": "Clears a field selection.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').clear();"
+            ]
+          },
+          "clearOther": {
+            "description": "Clears all field selections except this one.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').clearOther(true);"
+            ]
+          },
+          "getData": {
+            "description": "Gets field data.\nThe values are available as QFieldValue in array field.rows and is updated when the selection state changes.\nNotification OnData will be triggered after each update.\n\nIntroduced in Qlik Sense 2.1",
+            "kind": "function",
+            "params": [
+              {
+                "name": "options",
+                "description": "Object containing options for the getData call.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "rows": {
+                    "description": "Number of rows to fetch. Default 200.",
+                    "optional": true,
+                    "defaultValue": 200,
+                    "type": "number"
+                  },
+                  "frequencyMode": {
+                    "description": "Sets the qFrequencyMode. V=Absolute, P=Percent, R=Relative, N=No frequency. Default V.",
+                    "optional": true,
+                    "defaultValue": "'V'",
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "The field object.",
+              "type": "#/definitions/QField"
+            },
+            "examples": [
+              "var app = qlik.openApp(\"c31e2aba-3b46-4b13-8b87-c5c2514dea1d\");\n$scope.months = app.field(\"Month\").getData();\n\n<button ng-repeat=\"row in months.rows\" class=\"btn\" ng-click=\"row.select();\"\n  ng-class=\"{'btn-success':row.qState === 'S'}\">{{row.qText}}</button>"
+            ]
+          },
+          "getMoreData": {
+            "description": "Get more data for your field.\nNotification OnData will be triggered when complete.\n\nIntroduced in Qlik Sense 2.1",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "The field object",
+              "type": "#/definitions/QField"
+            },
+            "examples": [
+              "<button ng-if=\"fieldMonth.rowCount>fieldMonth.rows.length\" ng-click=\"fieldMonth.getMoreData()\">More</button>"
+            ]
+          },
+          "lock": {
+            "description": "Locks a field selection.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').lock();"
+            ]
+          },
+          "OnData": {
+            "description": "OnData notification",
+            "type": "#/definitions/Notification"
+          },
+          "qStateCounts": {
+            "description": "Object with number of values in different states. Only after getData() call.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "object",
+            "entries": {}
+          },
+          "rowCount": {
+            "description": "Number of different values. Only after getData() call.\n\nIntroduced in Qlik Sense 2.1.",
+            "type": "number"
+          },
+          "rows": {
+            "description": "Field values. You need to call getData() method to make this available. Since Qlik Sense 2.1.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QFieldValue"
+            }
+          },
+          "select": {
+            "description": "Select field values using indexes.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "Array",
+                "description": "of indexes to values to select.",
+                "kind": "array",
+                "items": {
+                  "type": "any"
+                }
+              },
+              {
+                "name": "toggle",
+                "description": "If true, toggle selected state.",
+                "optional": true,
+                "type": "boolean"
+              },
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').select([0, 1, 2], true, true);"
+            ]
+          },
+          "selectAll": {
+            "description": "Select all values in field.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').selectAll();"
+            ]
+          },
+          "selectAlternative": {
+            "description": "Select alternative values in field.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').selectAlternative();"
+            ]
+          },
+          "selectExcluded": {
+            "description": "Select excluded values in field.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').selectExcluded();"
+            ]
+          },
+          "selectMatch": {
+            "description": "Select matching field values.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "match",
+                "description": "Match string.",
+                "type": "string"
+              },
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').selectMatch('A', true);"
+            ]
+          },
+          "selectPossible": {
+            "description": "Select possible values in field.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').selectPossible();"
+            ]
+          },
+          "selectValues": {
+            "description": "Select field values.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "values",
+                "description": "Array of qFieldValues to select. Since 1.1, a simplified syntax with strings OR numbers also works. Note that for a numeric field, you need to provide the numeric value.",
+                "kind": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              {
+                "name": "toggle",
+                "description": "If true, toggle selected state. If false replace the current selection.",
+                "optional": true,
+                "type": "boolean"
+              },
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "app.field(\"Month\").selectValues([5], true, true);\napp.field(fld).selectValues([\"Wetterberg\"], true, true);"
+            ]
+          },
+          "toggleSelect": {
+            "description": "Toggle field selection.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "match",
+                "description": "Match string.",
+                "type": "string"
+              },
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').toggleSelect('A', true);"
+            ]
+          },
+          "unlock": {
+            "description": "Unlocks a field selection.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of an engine response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.field('LastName').unlock();"
+            ]
+          }
+        }
+      },
+      "QFieldSelections": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Selection state for a field.\n\nIntroduced in Qlik Sense 2.2.",
+          "params": []
+        },
+        "entries": {
+          "fieldName": {
+            "description": "The field name.",
+            "type": "string"
+          },
+          "qSortIndex": {
+            "description": "Sort index, starting from 0.",
+            "type": "number"
+          },
+          "field": {
+            "description": "Reference to the field.",
+            "type": "#/definitions/QField"
+          },
+          "locked": {
+            "description": "Is field locked?",
+            "type": "boolean"
+          },
+          "isNumeric": {
+            "description": "Is field numeric?",
+            "type": "boolean"
+          },
+          "totalCount": {
+            "description": "Total number of values in field.",
+            "type": "number"
+          },
+          "selectedCount": {
+            "description": "Number of selected values.",
+            "type": "number"
+          },
+          "qSelectionThreshold": {
+            "description": "Number of values that will be listed.",
+            "type": "number"
+          },
+          "qStateCounts": {
+            "description": "Object with number of values in different states.",
+            "type": "object"
+          },
+          "qSelected": {
+            "description": "Concatenated string of selected values if # of values are less than the threshold or string of format \"7 of 123\".",
+            "type": "string"
+          },
+          "selectedValues": {
+            "description": "Array with a maximum of qSelectionThreshold values that are selected. For each value the text plus the selection mode (NORMAL/AND/NOT).",
+            "kind": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "notSelectedValues": {
+            "description": "Array with a maximum of qSelectionThreshold values that are not selected. For each value the text plus the selection mode (NORMAL/AND/NOT).",
+            "kind": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "QFieldValue": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Field value for a Qlik Field.",
+          "params": []
+        },
+        "entries": {
+          "qText": {
+            "description": "Cell value formatted as set up in properties.",
+            "type": "string"
+          },
+          "qElemNumber": {
+            "description": "Cell value index.",
+            "type": "number"
+          },
+          "qState": {
+            "description": "Cell state.",
+            "type": "string"
+          },
+          "qNum": {
+            "description": "Cell numeric value, if cell is numeric.",
+            "optional": true,
+            "type": "number"
+          },
+          "qFrequency": {
+            "description": "Frequency, if calculated by engine.",
+            "optional": true,
+            "type": "string"
+          },
+          "select": {
+            "description": "Select field value.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "toggle",
+                "description": "If true, toggle selected state.",
+                "optional": true,
+                "type": "boolean"
+              },
+              {
+                "name": "softlock",
+                "description": "If true, locked selections can be overridden.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\nvar field = app.field('LastName');\nfield.getData();\n//after data is loaded fieldvalues will be in rows array\nfield.rows[0].select();"
+            ]
+          }
+        }
+      },
+      "QGlobal": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "cancelReload": {
+            "description": "Cancel reload.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.cancelReload();"
+            ]
+          },
+          "getAppList": {
+            "description": "Get app list.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "qlik.getGlobal(config).getAppList(function(list){\n  var str = \"\";\n  $.each(list, function(key, value) {\n    str +=  value.qDocName + '('+ value.qDocId + ')';\n  });\n  console.log(str);\n});"
+            ]
+          },
+          "getAuthenticatedUser": {
+            "description": "Retrieves information about the authenticated user.\nNote: This method is only applicable to Qlik Sense Enterprise on Windows. For Qlik Sense Enterprise SaaS, use {@link https://qlik.dev/apis/rest/users#%23%2Fentries%2Fusers%2Fme-get|User API}",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.getAuthenticatedUser(function(reply){\n  console.log('User:'+reply.qReturn);\n});"
+            ]
+          },
+          "getProductVersion": {
+            "description": "Get Product Version.\n\nIntroduced in Qlik Sense 1.2.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.getProductVersion(function(reply){\n  console.log('Product Version:'+reply.qReturn);\n});"
+            ]
+          },
+          "getProgress": {
+            "description": "Get Progress.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qRequestId",
+                "description": "RequestId from doReload call or 0. Complete information is returned if the identifier of the request is specified. If qRequestId = 0, less information is returned.",
+                "type": "number"
+              },
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.getProgress();"
+            ]
+          },
+          "getQTProduct": {
+            "description": "Get QT Product.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.getQTProduct(function(reply){\n  console.log('QT Product:'+reply.qReturn);\n});"
+            ]
+          },
+          "isPersonalMode": {
+            "description": "Get isPersonalMode.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "callback",
+                "description": "callback method.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.isPersonalMode(function(reply){\n  console.log('Personal mode:'+reply.qReturn);\n});"
+            ]
+          },
+          "off": {
+            "description": "Remove listener(s) for the global events.\n\nIntroduced in Qlik Sense February 2018.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. Can be: error, warning, closed. Removes all listeners if no eventName is provided.",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.on(\"error\", function (error) {\n  console.log(\"error listener called for global\", error);\n});\nglobal.off(\"error\");"
+            ]
+          },
+          "on": {
+            "description": "Adds listeners to the global events. Possible events are error, warning, and closed. Multiple listeners can be added to an event.\n\nIntroduced in Qlik Sense February 2018",
+            "kind": "function",
+            "params": [
+              {
+                "name": "eventName",
+                "description": "Name of the event. Can be: error, warning, closed.",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Callback method.",
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "var global = qlik.getGlobal(config);\nglobal.on(\"error\", function (error) {\n  console.log(\"error listener called for global\", error);\n});\nglobal.on(\"warning\", function (warning) {\n  console.log(\"warning listener called for global\", warning);\n});\nglobal.on(\"closed\", function (closed) {\n  console.log(\"closed listener called for global\", closed);\n});"
+            ]
+          }
+        }
+      },
+      "QGlobalTheme": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "apply": {
+            "description": "Apply a theme to all visualizations on the web page.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "ID of theme to apply.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "Promise of a boolean to indicate success or not.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "examples": [
+              "qlik.theme.apply('my-theme-id').then(function(result){\n  console.log('theme applied with result: ' + result);\n});"
+            ]
+          },
+          "get": {
+            "description": "Get theme as a QTheme object.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "id",
+                "description": "Theme id",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a QTheme object.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "#/definitions/QTheme"
+                }
+              ]
+            },
+            "examples": [
+              "qlik.theme.get('my-theme-id').then(function(qtheme){\n  console.log('Theme background color: ' + qtheme.properties.backgroundColor);\n});"
+            ]
+          }
+        }
+      },
+      "QHeader": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Wrapper around a HyperCube header cell.\n\nIntroduced in Qlik Sense 2.1.",
+          "params": []
+        },
+        "entries": {
+          "qFallbackTitle": {
+            "description": "Column title.",
+            "type": "string"
+          },
+          "qSortIndicator": {
+            "description": "A: ascending, D:Descending",
+            "type": "string"
+          },
+          "isOrderedBy": {
+            "description": "Is this the first column for sort?",
+            "type": "boolean"
+          },
+          "qReverseSort": {
+            "description": "Is sort order currently reversed for this column?",
+            "type": "boolean"
+          },
+          "col": {
+            "description": "Column number.",
+            "type": "number"
+          },
+          "qCardinal": {
+            "description": "Number of different values. Only for dimensions.",
+            "optional": true,
+            "type": "number"
+          },
+          "qStateCounts": {
+            "description": "Object with number of values in different states. Only for dimensions.",
+            "optional": true,
+            "type": "object"
+          },
+          "field": {
+            "description": "Field object with methods to manipulate the underlying field. Only used for dimensions.",
+            "optional": true,
+            "type": "#/definitions/QField"
+          },
+          "qMin": {
+            "description": "Minimum value. Only for measures.",
+            "optional": true,
+            "type": "number"
+          },
+          "qMax": {
+            "description": "Maximum value. Only for measures.",
+            "optional": true,
+            "type": "number"
+          },
+          "errorCode": {
+            "description": "Error code for this column. Only if column has an error. Since Qlik Sense 2.2.",
+            "optional": true,
+            "type": "number"
+          },
+          "errorMessage": {
+            "description": "Error message for this column. Only if column has an error. Since Qlik Sense 2.2.",
+            "optional": true,
+            "type": "string"
+          },
+          "orderBy": {
+            "description": "Set this column to be the first in the sort order.",
+            "kind": "function",
+            "params": []
+          },
+          "reverseOrder": {
+            "description": "Reverse the sorting order for the column.",
+            "kind": "function",
+            "params": []
+          },
+          "selectRange": {
+            "description": "Select a range in this measure.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "min",
+                "description": "Sets the minimum value of the range.",
+                "type": "number"
+              },
+              {
+                "name": "max",
+                "description": "Sets the maximum value of the range.",
+                "type": "number"
+              },
+              {
+                "name": "inclMin",
+                "description": "Set to true to include minimum value.",
+                "optional": true,
+                "type": "boolean"
+              },
+              {
+                "name": "inclMax",
+                "description": "Set to true to include maximum value.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "type": "Promise"
+            },
+            "examples": [
+              "this.table.headers[1].selectRange( this.minval, this.maxval );"
+            ]
+          }
+        },
+        "examples": [
+          "<th ng-repeat=\"head in data.headers\" class=\"header\" ng-click=\"head.orderBy()\">\n  {{head.qFallbackTitle}}\n       <i ng-if=\"head.isOrderedBy\" ng-click=\"head.reverseOrder()\"\n           ng-class=\"{ 'icon-triangle-top': head.qSortIndicator === 'A',\n\t\t\t'icon-triangle-bottom': head.qSortIndicator === 'D'}\">\n       </i>\n</th>"
+        ]
+      },
+      "QMeasureCell": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Wrapper around a HyperCube measure cell.",
+          "params": []
+        },
+        "entries": {
+          "qText": {
+            "description": "Cell value formatted as set up in properties.",
+            "type": "string"
+          },
+          "qNum": {
+            "description": "Cell numeric value, if cell is numeric.",
+            "optional": true,
+            "type": "number"
+          },
+          "getPercent": {
+            "description": "Get the value of this cell as percent of total. Note that this might be more than 100% if this is an average.",
+            "kind": "function",
+            "params": [],
+            "examples": [
+              "<div class=\"bar\" style=\"width:{{row.measures[0].getPercent()}}%\">"
+            ]
+          },
+          "getPercentOfMax": {
+            "description": "Get the value of this cell as percent of maximum.",
+            "kind": "function",
+            "params": [],
+            "examples": [
+              "<div class=\"bar\" style=\"width:{{row.measures[0].getPercentOfMax()}}%\">"
+            ]
+          }
+        }
+      },
+      "QNavigation": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "params": []
+        },
+        "entries": {
+          "ANALYSIS": {
+            "description": "Used for analysis mode.",
+            "type": "string"
+          },
+          "EDIT": {
+            "description": "Used for edit mode.",
+            "type": "string"
+          },
+          "getCurrentSheetId": {
+            "description": "Get current sheet ID.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "The result of the navigation",
+              "type": "#/definitions/QNavigationSheetResult"
+            },
+            "examples": [
+              "var result = qlik.navigation.getCurrentSheetId();\nconsole.log('sheet id: ' + result.sheetId);"
+            ]
+          },
+          "getMode": {
+            "description": "Get current mode.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "mode The current mode.",
+              "type": "string"
+            },
+            "examples": [
+              "var mode = qlik.navigation.getMode();\nconsole.log('mode: ' + mode);"
+            ]
+          },
+          "gotoSheet": {
+            "description": "Navigates to a given sheet in the current app.\nNote that the method will return before the actual navigation takes place.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "sheetId",
+                "description": "The ID of the sheet to navigate to.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "The result of the navigation operation.",
+              "type": "#/definitions/QNavigationSheetResult"
+            },
+            "examples": [
+              "var navigationResult = qlik.navigation.gotoSheet('xYgfJ');"
+            ]
+          },
+          "gotoStory": {
+            "description": "Navigates to a given story in the current app.\nNote that the method will return before the actual navigation takes place.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "storyId",
+                "description": "The ID of the story to navigate to.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "The result of the navigation operation.",
+              "type": "#/definitions/QNavigationStoryResult"
+            },
+            "examples": [
+              "var navigationResult = qlik.navigation.gotoStory('xYgfJ');"
+            ]
+          },
+          "isModeAllowed": {
+            "description": "Checks if a given mode is allowed.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "mode",
+                "description": "The mode to check availability of. Can be either {@link QNavigaton#EDIT} or {@link QNavigaton#ANALYSIS}.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "If the mode is allowed or not.",
+              "type": "boolean"
+            },
+            "examples": [
+              "if (qlik.navigation.isModeAllowed(QNavigation#EDIT)) {\n  //enable edit button\n};"
+            ]
+          },
+          "nextSheet": {
+            "description": "Navigates to the next sheet in the current app. It will do nothing if you do not have sheets in the current context.\nNote that the method will return before the actual navigation takes place.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "The result of the navigation operation.",
+              "type": "#/definitions/QNavigationSheetResult"
+            },
+            "examples": [
+              "var navigationResult = qlik.navigation.nextSheet();"
+            ]
+          },
+          "prevSheet": {
+            "description": "Navigates to the previous sheet in the current app. It will do nothing if you do not have sheets in the current context.\nNote that the method will return before the actual navigation takes place.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "The result of the navigation operation.",
+              "type": "#/definitions/QNavigationSheetResult"
+            },
+            "examples": [
+              "var navigationResult = qlik.navigation.prevSheet();"
+            ]
+          },
+          "setMode": {
+            "description": "Set current mode.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "mode",
+                "description": "The mode to change to. Can be either {@link QNavigation#EDIT} or {@link QNavigation#ANALYSIS}.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "The result of the mode change.",
+              "type": "#/definitions/QNavigationModeResult"
+            },
+            "examples": [
+              "var result = qlik.navigation.setMode(QNavigation#EDIT);\nconsole.log('mode: ' + result.mode);"
+            ]
+          }
+        }
+      },
+      "QNavigationModeResult": {
+        "description": "Return value from mode related navigation methods.",
+        "kind": "object",
+        "entries": {
+          "success": {
+            "description": "true if the operation was successful.",
+            "type": "boolean"
+          },
+          "mode": {
+            "description": "The new mode. Can be either {@link QNavigation#EDIT} or {@link QNavigation#ANALYSIS}.",
+            "optional": true,
+            "type": "string"
+          },
+          "error": {
+            "description": "The error code if an error occurred, for example, MODENOTALLOWED.",
+            "optional": true,
+            "type": "string"
+          },
+          "errorMsg": {
+            "description": "The error message, for example, 'Mode not allowed'.",
+            "optional": true,
+            "type": "string"
+          }
+        }
+      },
+      "QNavigationSheetResult": {
+        "description": "Return value from sheet navigation methods.",
+        "kind": "object",
+        "entries": {
+          "success": {
+            "description": "true if the navigation was successful.",
+            "type": "boolean"
+          },
+          "sheetId": {
+            "description": "The new sheet ID.",
+            "optional": true,
+            "type": "string"
+          },
+          "error": {
+            "description": "The error code if an error occurred, for example, NOSUCHSHEET or NOCURRENTSHEET.",
+            "optional": true,
+            "type": "string"
+          },
+          "errorMsg": {
+            "description": "The error message, for example, 'No current sheet'.",
+            "optional": true,
+            "type": "string"
+          }
+        }
+      },
+      "QNavigationStoryResult": {
+        "description": "Return value from story navigation methods.",
+        "kind": "object",
+        "entries": {
+          "success": {
+            "description": "true if the navigation was successful.",
+            "type": "boolean"
+          },
+          "storyId": {
+            "description": "The new story ID.",
+            "optional": true,
+            "type": "string"
+          },
+          "error": {
+            "description": "The error code if an error occurred, for example, NOSUCHSTORY.",
+            "optional": true,
+            "type": "string"
+          },
+          "errorMsg": {
+            "description": "The error message, for example, 'No such story'.",
+            "optional": true,
+            "type": "string"
+          }
+        }
+      },
+      "QRow": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Wrapper around a HyperCube data row.",
+          "params": []
+        },
+        "entries": {
+          "dimensions": {
+            "description": "Dimension cells.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QDimensionCell"
+            }
+          },
+          "measures": {
+            "description": "Measure cells.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QMeasureCell"
+            }
+          },
+          "cells": {
+            "description": "All cells, in the order defined in properties.",
+            "kind": "array",
+            "items": {
+              "type": "any"
+            }
+          }
+        },
+        "examples": [
+          "<div ng-repeat=\"row in data.rows\" class=\"row\"  title=\"{{row.dimensions[0].qText}}\"\n   data-value=\"{{ row.dimensions[0].qElemNumber }}\">\n   <div class=\"bar\" style=\"width:{{row.measures[0].getPercent()}}%\">\n       <span>{{row.dimensions[0].qText}}</span>\n   </div>\n   <div class=\"per\">\n       <span class=\"{{row.measures[0].getPercent()>95 ? 'over':'' }}\">{{row.measures[0].qText}}</span>\n   </div>\n</div>"
+        ]
+      },
+      "QSelectionState": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "The SelectionState API allows developers to work with selection state data returned from the Qlik engine without having deeper\nknowledge of internal constructs.\n\nNotification is sent when data is available. Notification will be triggered after each update. To receive\nnotification, bind a listener on <i>'OnData'</i> of QSelectionState instance.",
+          "params": []
+        },
+        "entries": {
+          "stateName": {
+            "description": "State name, '$' for default state.",
+            "type": "string"
+          },
+          "selections": {
+            "description": "Selections",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QFieldSelections"
+            }
+          },
+          "backCount": {
+            "description": "Number of back steps available.",
+            "type": "number"
+          },
+          "forwardCount": {
+            "description": "Number of forward steps available.",
+            "type": "number"
+          },
+          "OnData": {
+            "description": "OnData notification.",
+            "type": "#/definitions/Notification"
+          },
+          "clearAll": {
+            "description": "Clear all selections in this state.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "lockedAlso",
+                "description": "Clear locked fields also.",
+                "optional": true,
+                "type": "boolean"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\nvar selState = app.selectionState();\nselState.clearAll(true);"
+            ]
+          },
+          "lockAll": {
+            "description": "Lock all selections in this state.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\nvar selState = app.selectionState();\nselState.lockAll();"
+            ]
+          },
+          "unlockAll": {
+            "description": "Unlock all selections in this state.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "A promise of a Qlik engine reply",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\nvar selState = app.selectionState();\nselState.unlockAll();"
+            ]
+          }
+        },
+        "examples": [
+          "// create an object\nconst selState = app.selectionState();\n\nconst listener = function() {\n  console.log('Back count:' + selState.backCount);\n  selState.OnData.unbind( listener );  //unregister the listener when no longer notification is needed.\n};\nselState.OnData.bind( listener ); //bind the listener",
+          "Example based on using AngularJS.\n\nYour main script:\n\n$scope.selState = app.selectionState();\n\nIn your AngularJS template:\n<button type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"selState.clearAll()\" aria-label=\"Clear\">\n  <span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n</button>\n\n<li ng-repeat=\"sel in selState.selections\">{{sel.fieldName}}: {{sel.qSelected}}\n  <button type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"sel.field.clear()\" aria-label=\"Lock\">\n    <span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>\n  </button>\n</li>"
+        ]
+      },
+      "QTable": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "The Table API allow developers to work with tabular data returned from the Qlik engine without having deeper\nknowledge of internal constructs like, for example, a hypercube.\nFrom a technical perspective it is a wrapper around HyperCube data from engine.\n\nNotification is sent when data is available. Notification will be triggered after each update. To receive\nnotification bind a listener on <i>'OnData'</i> of QTable instance.",
+          "params": []
+        },
+        "entries": {
+          "rows": {
+            "description": "Data rows.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QRow"
+            }
+          },
+          "headers": {
+            "description": "Header information.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QHeader"
+            }
+          },
+          "totals": {
+            "description": "Total information for measures.",
+            "kind": "array",
+            "items": {
+              "type": "#/definitions/QMeasureCell"
+            }
+          },
+          "rowCount": {
+            "description": "Total number of rows for the qHyperCube, including rows not fetched from server.",
+            "type": "number"
+          },
+          "colCount": {
+            "description": "Total number of columns for the qHyperCube.",
+            "type": "number"
+          },
+          "exportData": {
+            "description": "Export data of the underlying hyperCube in OOXML or CSV format.\nNote: The entire hyperCube will be exported, not just the current data-page.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "options",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "format": {
+                    "description": "Data format. Can be one of:\n                               OOXML (open XML, default),\n                               CSV_C (comma separated CSV),\n                               CSV_T (tab separated CSV)",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "filename": {
+                    "description": "This parameter is optional and only used in desktop. Sets the name of the exported file when downloaded. Example: filename(guid).xlsx.",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "state": {
+                    "description": "Can be: A: all values, P: possible values (default)",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "download": {
+                    "description": "Automatically start download of file (with window.open), defaults to false.",
+                    "optional": true,
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "name": "callback",
+                "description": "Callback function returning the link to the exported file.",
+                "optional": true,
+                "type": "function"
+              }
+            ],
+            "examples": [
+              "var qTable = qlik.table(this);\n\nvar $exportButton = $( document.createElement('button'));\n$exportButton.html('Export');\n$exportButton.bind('click', function (  ) {\n\t\t\tqTable.exportData({download: true});\n\t\t});\n$element.append($exportButton);",
+              "// Example using AngularJS in a Qlik Sense visualization extension:\n\n// Main script:\n...\npaint: function ( ) {\n\t\t//setup scope.table\n\t\tif ( !this.$scope.table ) {\n\t\t\tthis.$scope.table = qlik.table( this );\n\t\t}\n\t}\n...\n\n// In your template:\n<button ng-click=\"table.exportData({download:true})\">Create Excel file</button>"
+            ]
+          },
+          "getColByName": {
+            "description": "Get column number for a given field name.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "fld",
+                "description": "Field name.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "Column number, starting with zero. Undefined if no column with that name.",
+              "type": "number"
+            },
+            "examples": [
+              "var table = qlik.table( this );\nvar colNumber = table.getColByName('Closed cases');"
+            ]
+          },
+          "getMoreData": {
+            "description": "Get more data for your qHyperCube.",
+            "kind": "function",
+            "params": [],
+            "examples": [
+              "// Example based on using AngularJS in a Qlik Sense visualization extension.\n\n// Main extension script file:\n...\npaint: function ( ) {\n\t\t//setup scope.data\n\t\tif ( !this.$scope.data ) {\n\t\t\tthis.$scope.data = qlik.table( this );\n\t\t}\n\t}\n...\n\n// AngularJS template:\n<button ng-if=\"data.rowcount>data.rows.length\" ng-click=\"data.getMoreData()\">More</button>"
+            ]
+          }
+        },
+        "examples": [
+          "// Initialization using the hypercube of the current visualization\nvar table = qlik.table( this );\n\nvar listener = function() {\n  var rowCount = table.rowCount;\n  var colCount = table.colCount;\n  table.OnData.unbind( listener );  //unregister the listener when no longer notification is needed.\n};\ntable.OnData.bind( listener ); //bind the listener",
+          "// Example based on using AngularJS.\n\n// Your main script:\n\nif ( !this.$scope.table ) {\n  this.$scope.table = qlik.table( this );\n}\n\n// In your AngularJS template:\n\n<tr ng-repeat=\"row in table.rows\">\n   <td ng-repeat=\"cell in row.cells\"> {{cell.qText}} </td>\n</tr>"
+        ]
+      },
+      "QTheme": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Wrapper for a theme with helper methods.\n\nIntroduced in Qlik Sense February 2018.",
+          "params": []
+        },
+        "entries": {
+          "id": {
+            "description": "Theme id",
+            "type": "string"
+          },
+          "properties": {
+            "description": "Theme properties tree structure with calculated styling values.\n\t\t\t\t\t\t\t\t   Functions, variables, and inheritance have been computed from the original theme JSON file.",
+            "type": "object"
+          },
+          "apply": {
+            "description": "Apply theme to all visualizations on the web page.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "Promise of a boolean to indicate success or not.",
+              "type": "Promise",
+              "generics": [
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "examples": [
+              "qlik.theme.get('my-theme-id').then(function(qtheme){\n  qtheme.apply().then(function(result){\n    console.log('theme applied with result: ' + result);\n  });\n});"
+            ]
+          },
+          "getStyle": {
+            "description": "Get the value of a style attribute in the theme by searching in the theme's JSON structure.\nThe search starts at the specified base path and continues upwards until the value is found.\nIf possible, it will get the attribute's value using the given path.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "basePath",
+                "description": "Base path in the theme's json structure to start the search in (specified as a name path separated by dots).",
+                "type": "string"
+              },
+              {
+                "name": "path",
+                "description": "Expected path for the attribute (specified as a name path separated by dots).",
+                "type": "string"
+              },
+              {
+                "name": "attribute",
+                "description": "Name of the style attribute.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "The style value.",
+              "type": "string"
+            },
+            "examples": [
+              "qlik.theme.get('my-theme-id').then(function(qtheme){\n  console.log('Object title font size: ' + qtheme.getStyle('object', 'title.main', 'fontSize'));\n});"
+            ]
+          }
+        }
+      },
+      "QVariable": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "Creates an instance of the Variable API.",
+          "params": [
+            {
+              "name": "app",
+              "description": "The app object.",
+              "type": "object"
+            },
+            {
+              "name": "qapp",
+              "description": "The qlik.app wrapper for the app object.",
+              "type": "object"
+            }
+          ]
+        },
+        "entries": {
+          "create": {
+            "description": "Create variable.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "description": "Promise of a Variable model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.create('myvar').then(function(model){\n  // do something with myvar\n});"
+            ]
+          },
+          "createSessionVariable": {
+            "description": "Create session variable, which is a temporary variable that is not persisted and needs to be recreated for each new session.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qProp",
+                "description": "Variable properties.",
+                "kind": "object",
+                "entries": {
+                  "qInfo": {
+                    "kind": "object",
+                    "entries": {
+                      "qId": {
+                        "description": "Variable ID.",
+                        "optional": true,
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "qName": {
+                    "description": "Variable name.",
+                    "type": "string"
+                  },
+                  "qComment": {
+                    "description": "Comment regarding the variable.",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "qDefinition": {
+                    "description": "Variable definition.",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "qNumberPresentation": {
+                    "description": "Defines the format of the value.",
+                    "optional": true,
+                    "type": "object"
+                  },
+                  "qIncludeInBookmark": {
+                    "description": "Include in bookmark flag.",
+                    "optional": true,
+                    "type": "boolean"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "Promise of a Variable model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.createSessionVariable({qName : 'myvar', qDefinition: 'Month'}).then(function(model){\n  // do something with myvar\n});"
+            ]
+          },
+          "get": {
+            "description": "Get a variable by ID.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qId",
+                "description": "Variable ID.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "Promise of a Variable model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.get('yTgsRI').then(function(model){\n  // do something with myvar\n});"
+            ]
+          },
+          "getByName": {
+            "description": "Get a variable by name.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qName",
+                "description": "Variable name.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Variable model.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.getByName('myvar').then(function(model){\n  // do something with myvar\n});"
+            ]
+          },
+          "getContent": {
+            "description": "Get variable content.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "name",
+                "description": "Variable name.",
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "description": "Callback to receive the content.",
+                "type": "#/definitions/QVariable/definitions/getContentCallback"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.getContent('myvar',function ( reply ) {\n  console.log( JSON.stringify( reply ) );\n});"
+            ]
+          },
+          "setContent": {
+            "description": "Set variable content.",
+            "availability": {
+              "deprecated": true
+            },
+            "kind": "function",
+            "params": [
+              {
+                "name": "name",
+                "description": "Variable name.",
+                "type": "string"
+              },
+              {
+                "name": "content",
+                "description": "Variable content.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.setContent('myvar','=(1+1)');"
+            ]
+          },
+          "setNumValue": {
+            "description": "Set variable numeric value.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qName",
+                "description": "Variable name.",
+                "type": "string"
+              },
+              {
+                "name": "qVal",
+                "description": "Variable value.",
+                "type": "number"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.setNumValue('myvar',5);"
+            ]
+          },
+          "setStringValue": {
+            "description": "Set variable string value.\n\nIntroduced in Qlik Sense 2.1.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "qName",
+                "description": "Variable name.",
+                "type": "string"
+              },
+              {
+                "name": "qVal",
+                "description": "Variable value.",
+                "type": "string"
+              }
+            ],
+            "returns": {
+              "description": "A promise of a Qlik engine reply.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.variable.setStringValue('myvar','=(1+1)');"
+            ]
+          }
+        },
+        "definitions": {
+          "getContentCallback": {
+            "kind": "function",
+            "params": [
+              {
+                "name": "data",
+                "description": "Content of the variable.",
+                "kind": "object",
+                "entries": {
+                  "qContent": {
+                    "description": "Value of the variable.",
+                    "kind": "object",
+                    "entries": {
+                      "qString": {
+                        "description": "Textual value of the variable.",
+                        "type": "string"
+                      },
+                      "qIsNum": {
+                        "description": "Numeric value of the variable, if the value can be converted into a number.",
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "name": "qapp",
+                "description": "The qlik.app object wrapping the app.",
+                "type": "object"
+              }
+            ]
+          }
+        }
+      },
+      "QVisualization": {
+        "kind": "class",
+        "constructor": {
+          "kind": "function",
+          "description": "The Visualization API allows developers to get visualizations defined in an app and to\ncreate temporary visualizations on the fly.\n\nIntroduced in Qlik Sense 2.2.",
+          "params": [
+            {
+              "name": "qapp",
+              "description": "The app referenced in the visualization.",
+              "type": "#/definitions/QApp"
+            },
+            {
+              "name": "model",
+              "description": "The visualization model.",
+              "type": "object"
+            }
+          ]
+        },
+        "entries": {
+          "table": {
+            "description": "Table object for this visualization. Only for visualizations built on a hypercube.",
+            "type": "#/definitions/QTable"
+          },
+          "close": {
+            "description": "Close visualization.",
+            "kind": "function",
+            "params": [],
+            "returns": {
+              "type": "Promise"
+            }
+          },
+          "exportData": {
+            "description": "Exports data of the underlying hyperCube in OOXML or CSV format.\nNote: The entire hyperCube will be exported, not just the current data-page.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "options",
+                "kind": "object",
+                "entries": {
+                  "format": {
+                    "description": "Data format. Can be one of \"OOXML\" (open XML, default), \"CSV_C\" (comma separated CSV) or \"CSV_T\" (tab separated CSV)",
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "state": {
+                    "description": "Can be either \"A\", for all values, or \"P\", for possible values. \"P\" is the default.",
+                    "optional": true,
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "Promise<string> - A promise of the file location URL.",
+              "type": "any"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.exportData({format:'CSV_T', state: 'A'}).then(function (link) {\n    window.open(link);\n  });\n});"
+            ]
+          },
+          "exportImg": {
+            "description": "Exports a QVisualization instance to an image.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "settings",
+                "description": "Image export settings.",
+                "kind": "object",
+                "entries": {
+                  "height": {
+                    "description": "Output height in pixels.",
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "width": {
+                    "description": "Output width in pixels.",
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "format": {
+                    "description": "The image type the visualization should be exported to. Can be PNG or JPG. Default is PNG.",
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "Promise<string> - A promise of a link to the exported file.",
+              "type": "any"
+            },
+            "examples": [
+              "var element = document.getElementById('QV01');\nvar settings = { imageType: 'png', height: element.offsetHeight, width: element.offsetWidth }\n\nvar app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.exportImg(settings).then(function (result) {\n    console.log('Image download link: ', result);\n  });\n});"
+            ]
+          },
+          "exportPdf": {
+            "description": "Exports a QVisualization instance to PDF.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "settings",
+                "description": "PDF export settings.",
+                "kind": "object",
+                "entries": {
+                  "documentSize": {
+                    "description": "Size of the output PDF. Accepts a string with one of the following document formats: \"A3\", \"A4\", \"A5\", \"A6\", \"A7\", \"Letter\" or an object with custom size.",
+                    "kind": "union",
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "#/definitions/ObjectMetricSize"
+                      }
+                    ],
+                    "type": "any"
+                  },
+                  "orientation": {
+                    "description": "Can be \"portrait\" or \"landscape\" (ignored if documentSize is an object) default \"landscape\".",
+                    "type": "string"
+                  },
+                  "aspectRatio": {
+                    "description": "Aspect ratio: 0 = as specified in objectSize, 2 = fit to page.",
+                    "type": "number"
+                  },
+                  "objectSize": {
+                    "description": "Exported object height and width in pixels. Required when aspectRatio is 0.",
+                    "type": "#/definitions/ObjectPixelSize"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "Promise<string> - A promise of a link to the exported file.",
+              "type": "any"
+            },
+            "examples": [
+              "var settings = {\n  documentSize: \"a4\",\n  aspectRatio: 2,\n  orientation: \"landscape\"\n};\nvar app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.exportPdf(settings).then(function (result) {\n    console.log('PDF download link: ', result);\n  });\n});"
+            ]
+          },
+          "resize": {
+            "description": "Inform the visualization it has been resized and should repaint.",
+            "kind": "function",
+            "params": []
+          },
+          "setOptions": {
+            "description": "Set visualization options.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "options",
+                "description": "Options to set. Refer to visualization.create for documentation.",
+                "type": "object"
+              }
+            ],
+            "returns": {
+              "description": "A promise of the RPC call's response.",
+              "type": "Promise"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.setOptions({title:\"Now improved\"});\n});"
+            ]
+          },
+          "show": {
+            "description": "Show visualization in HTML element.",
+            "kind": "function",
+            "params": [
+              {
+                "name": "element",
+                "description": "HTML element or HTML element ID.",
+                "optional": true,
+                "kind": "union",
+                "items": [
+                  {
+                    "type": "HTMLElement"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "type": "any"
+              },
+              {
+                "name": "options",
+                "description": "Options to set. Since Qlik Sense 3.0.",
+                "optional": true,
+                "kind": "object",
+                "entries": {
+                  "noInteraction": {
+                    "description": "true if you want to disable all interaction in the visualization.",
+                    "optional": true,
+                    "type": "boolean"
+                  },
+                  "noSelections": {
+                    "description": "true if you want to disable selections in the visualization.",
+                    "optional": true,
+                    "type": "boolean"
+                  }
+                }
+              }
+            ],
+            "returns": {
+              "description": "Scope of the visualization.",
+              "type": "object"
+            },
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.show(\"QV01\");\n});"
+            ]
+          },
+          "toggleDataView": {
+            "description": "Toggles data view.\n\nCreates a DataView object if it doesn't already exist and toggles data view.\n\nIntroduced in Qlik Sense June 2018.\n\nDisclaimer:\nThe element that is provided as a parameter to the QVisualization.show method must have\nCSS property position set to relative and must not have any padding. If these rules are\nnot followed, the visualization object may not calculate its width and height correctly\nand you may not be able to scroll and navigate after toggling data view.\n\nProposed action:\nWrap the element with another element. The wrapper can then be styled without any limitations.",
+            "kind": "function",
+            "params": [],
+            "examples": [
+              "var app = qlik.openApp('c31e2aba-3b46-4b13-8b87-c5c2514dea1d');\napp.visualization.get('xGhjKl').then(function(vis){\n  vis.show(\"QV01\");\n  vis.toggleDataView().then(function(toggled){\n    if(toggled){\n      this.getElementsByClassName('qv-st')[0].focus();\n    }\n  }\n});"
+            ]
+          }
+        }
+      }
+    }
+  }
